@@ -1,0 +1,9 @@
+platform :ios, '9.0'
+
+target 'WLLocalPhotoBrowerDemo' do
+	use_frameworks!
+
+	pod 'YYWebImage'
+    pod 'SnapKit'
+    
+end

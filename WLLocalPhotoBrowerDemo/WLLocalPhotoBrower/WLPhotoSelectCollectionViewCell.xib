@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="WLPhotoSelectCollectionViewCell" customModule="LikeUber" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9xS-jZ-Sbw">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aup-cu-31l" userLabel="checkButton">
+                        <rect key="frame" x="22" y="0.0" width="28" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="28" id="1U3-E0-mrQ"/>
+                            <constraint firstAttribute="width" constant="28" id="sZe-tc-BhF"/>
+                        </constraints>
+                        <connections>
+                            <action selector="photoSelectClicked:" destination="gTV-IL-0wX" eventType="touchUpInside" id="m1C-AI-Zff"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="Aup-cu-31l" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="1BJ-SD-Efe"/>
+                <constraint firstAttribute="trailing" secondItem="Aup-cu-31l" secondAttribute="trailing" id="35m-vj-odh"/>
+                <constraint firstItem="9xS-jZ-Sbw" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="8nu-bQ-tHj"/>
+                <constraint firstItem="9xS-jZ-Sbw" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="9ed-gt-7lz"/>
+                <constraint firstAttribute="bottom" secondItem="9xS-jZ-Sbw" secondAttribute="bottom" id="f8N-c4-4zR"/>
+                <constraint firstAttribute="trailing" secondItem="9xS-jZ-Sbw" secondAttribute="trailing" id="lkX-te-c7m"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <connections>
+                <outlet property="btSelect" destination="Aup-cu-31l" id="Kld-YF-oBt"/>
+                <outlet property="imageView" destination="9xS-jZ-Sbw" id="hog-Aw-l9K"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>
