@@ -10,13 +10,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
-            timestampString = "544864082.978574"
+            timestampString = "544866969.6128809"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "viewWillLayoutSubviews()"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "init(coder:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WLLocalPhotoBrowerDemo.WLPhotoSelectViewController.__allocating_init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;WLLocalPhotoBrowerDemo.WLPhotoSelectViewController&gt;"
+                  moduleName = "WLLocalPhotoBrowerDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/leiwang/WLLocalPhotoBrowser/WLLocalPhotoBrowerDemo/WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
+                  timestampString = "544866969.863722"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WLLocalPhotoBrowerDemo.WLPhotoSelectViewController.init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;WLLocalPhotoBrowerDemo.WLPhotoSelectViewController&gt;"
+                  moduleName = "WLLocalPhotoBrowerDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/leiwang/WLLocalPhotoBrowser/WLLocalPhotoBrowerDemo/WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
+                  timestampString = "544866969.86752"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "88">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

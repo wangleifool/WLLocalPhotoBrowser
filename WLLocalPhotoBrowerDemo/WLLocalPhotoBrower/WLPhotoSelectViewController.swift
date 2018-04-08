@@ -2,24 +2,23 @@
 //  WLPhotoSelectViewController.swift
 //  LikeUber
 //
-//  Created by lei wang on 2018/1/23
+//  Created by lei wang on 2018/1/23.
 //  Copyright © 2018年 lei wang. All rights reserved.
+//
 
 import UIKit
 import SnapKit
 import Photos
-
-let ScreenWidth = UIScreen.main.bounds.width
-let ScreenHeight = UIScreen.main.bounds.height
-
-
 
 let numPhotoPerLine:CGFloat = 4.0
 let heightAllAlbumsTableView = 400.0
 let heightForAlbumTableViewCellImage:CGFloat = 44.0
 let heightForAlbumTableViewCell:CGFloat      = 64.0
 
-let maxSelectPhotoNum = 9  // 最多可以选择的照片数量
+let ScreenWidth = UIScreen.main.bounds.width
+let ScreenHeight = UIScreen.main.bounds.height
+
+
 
 var justReachMaxNum: Bool = false
 
@@ -28,6 +27,7 @@ let hideAllAlbumTitle = "轻触这里收起 "
 
 let imageCollectionReusableIdentifier = "PhotoSelectCell"
 
+var maxSelectPhotoNum = 9  // 最多可以选择的照片数量
 
 private extension UICollectionView {
     func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -43,6 +43,8 @@ protocol WLPhotoSelectViewControllerDelegate {
 class WLPhotoSelectViewController: UIViewController {
     
     var delegate: WLPhotoSelectViewControllerDelegate?
+    
+    
     
     // 媒体库
     var allAvailableAlbums: PHFetchResult<PHAssetCollection>!
@@ -93,6 +95,43 @@ class WLPhotoSelectViewController: UIViewController {
     var previousPreheatRect = CGRect.zero
     
     
+    // MARK: initial
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+
+    //3.重写无参数初始化方法，自动调用xib文件
+
+    convenience init() {
+
+        // 获取类名，同nib同名
+        let nibNameOrNil = String(NSStringFromClass(type(of: self)).split(separator: ".").last!)
+
+        //考虑到xib文件可能不存在或被删，故加入判断
+
+        if Bundle.main.path(forResource: nibNameOrNil, ofType: "nib") != nil
+
+        {
+
+            self.init(nibName: nibNameOrNil, bundle: nil)
+
+        } else {
+
+            self.init(nibName: nil, bundle: nil)
+
+            self.view.backgroundColor = UIColor.white
+
+        }
+        
+        
+    }
+
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     // MARK: view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,13 +140,11 @@ class WLPhotoSelectViewController: UIViewController {
         
         self.view.layer.cornerRadius = 8.0
         self.view.backgroundColor = UIColor.brown
-        
-        
+        // Do any additional setup after loading the view.
         
         getAllAvailableAlbumData()
         
-        configureCollectionView()
-       
+        configureCollectionView() 
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -126,7 +163,7 @@ class WLPhotoSelectViewController: UIViewController {
         let StatusBarHeight: CGFloat = WLDevice.isIPhoneX() ? 44.0 : 20.0
         self.view.frame = CGRect(x: 0, y: StatusBarHeight, width: ScreenWidth, height: ScreenHeight)
         super.viewWillLayoutSubviews()
-        print(self.view.frame)
+        print(self.view.frame)        
     }
     
     override func didReceiveMemoryWarning() {
@@ -204,11 +241,8 @@ class WLPhotoSelectViewController: UIViewController {
     }
     
     func updateSelectedNumUI() {
-        if selectNumImageView == nil {
-            return
-        }
-        
         let num = selectedPhotoIndex.count
+        
         
         if num == 0 {
             selectNumImageView.image = nil
@@ -225,7 +259,6 @@ class WLPhotoSelectViewController: UIViewController {
             
             if let image = UIImage.createNumImage(num: num) {
                 selectNumImageView.image  = image
-                
                 UIView.animateKeyframes(withDuration: wlAnimationTimeInterval, delay: 0, options: UIViewKeyframeAnimationOptions(rawValue: 0), animations: {
                     
                     UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1/4.0, animations: {
@@ -343,10 +376,7 @@ class WLPhotoSelectViewController: UIViewController {
         }
         
         // 一些初始化
-        if allAlbumsPhotoAssets.count != 0 {
-            currentAlbumPhotoAsset = allAlbumsPhotoAssets.object(at: currentAlbumIndex) as? PHFetchResult<PHAsset>
-        }
-        
+        currentAlbumPhotoAsset = allAlbumsPhotoAssets.object(at: currentAlbumIndex) as? PHFetchResult<PHAsset>
         
     }
     
