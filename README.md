@@ -14,14 +14,12 @@ var photoSelectVC:WLPhotoSelectViewController!
 
 photoSelectVC = WLPhotoSelectViewController()
 photoSelectVC.delegate = self
-photoSelectVC.modalPresentationStyle = .overFullScreen
 photoSelectVC.setupTransitionAniamtion(sourceVC: self)
 
 // 显示
 
 @objc func btChooseImagePressed() {
-    photoSelectVC.resetToDefault()
-    self.present(photoSelectVC, animated: true, completion: nil)
+    photoSelectVC.showFrom(VC: self)
 }
 
 // 遵循WLPhotoSelectViewControllerDelegate的回调

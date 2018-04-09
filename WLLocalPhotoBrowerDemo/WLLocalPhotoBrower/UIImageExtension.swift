@@ -49,6 +49,10 @@ extension UIImage {
         return createImage(bundleName: "WLPhotoSelectBrower", imageFullName: "close@3x.png")
     }
     
+    class func createCloseWhiteImage() -> UIImage? {
+        return createImage(bundleName: "WLPhotoSelectBrower", imageFullName: "closeWhite@3x.png")
+    }
+    
     // 0 - 9
     class func createNumImage(num: Int) -> UIImage? {
         let fullName = "number"+String(num)+"@3x.png"

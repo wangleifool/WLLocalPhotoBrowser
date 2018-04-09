@@ -6,49 +6,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
-            timestampString = "544866969.6128809"
+            timestampString = "544956803.122574"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "init(coder:)"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
+            landmarkName = "getAllAvailableAlbumData()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "WLLocalPhotoBrowerDemo.WLPhotoSelectViewController.__allocating_init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;WLLocalPhotoBrowerDemo.WLPhotoSelectViewController&gt;"
-                  moduleName = "WLLocalPhotoBrowerDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leiwang/WLLocalPhotoBrowser/WLLocalPhotoBrowerDemo/WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
-                  timestampString = "544866969.863722"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "WLLocalPhotoBrowerDemo.WLPhotoSelectViewController.init(coder: __ObjC.NSCoder) -&gt; Swift.Optional&lt;WLLocalPhotoBrowerDemo.WLPhotoSelectViewController&gt;"
-                  moduleName = "WLLocalPhotoBrowerDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/leiwang/WLLocalPhotoBrowser/WLLocalPhotoBrowerDemo/WLLocalPhotoBrower/WLPhotoSelectViewController.swift"
-                  timestampString = "544866969.86752"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "45"
-                  endingLineNumber = "45"
-                  offsetFromSymbolStart = "88">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WLLocalPhotoBrower/WLPhotoSelectVC-AllPhotoCollectionView.swift"
+            timestampString = "544956803.122686"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "createPhotoItem(index:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

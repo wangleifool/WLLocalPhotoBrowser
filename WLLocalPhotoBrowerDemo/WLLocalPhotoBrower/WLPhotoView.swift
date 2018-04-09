@@ -21,6 +21,7 @@ class WLPhotoView: UIScrollView,UIScrollViewDelegate {
         let imageView = YYAnimatedImageView()
         imageView.backgroundColor = UIColor.darkGray
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true  // 非常重要， 不然动画结束后，可能UI上的imageView并没有你希望的尺寸
         return imageView
     }()
     
@@ -92,8 +93,14 @@ class WLPhotoView: UIScrollView,UIScrollViewDelegate {
                 self.imageView.image = item?.thumbImage
                 
                 PHImageManager.default().requestImageForAsset(asset: item!.imageAsset!, isSync: false, isHighQuality: true, resultHandler: { (image, _) in
-                    self.imageView.image = image
-                    self.resizeImageView()
+                    
+                    if image != nil {
+                        self.imageView.image = image
+                        self.resizeImageView()
+                    } else {
+                       print("下载高清图片失败")
+                    }
+                    
                 })
             }
             

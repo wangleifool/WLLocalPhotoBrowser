@@ -50,7 +50,7 @@ class WLPhotoSelectViewController: UIViewController {
     var allAvailableAlbums: PHFetchResult<PHAssetCollection>!
     var allAvailableAlbumsArray: NSMutableArray! = NSMutableArray()
     var allAlbumsPhotoAssets: NSMutableArray! = NSMutableArray()
-    var avaliableSmartAlbum = ["相机胶卷","全景照片","个人收藏","最近添加","屏幕截图","Camera Roll","Panoramas","Favorite","Recently Added","Screenshots"]
+    var avaliableSmartAlbum = ["相机胶卷","全景照片","个人收藏","最近添加","屏幕截图","Camera Roll","All Photos","Panoramas","Favorite","Recently Added","Screenshots"]
     var assetManager = PHCachingImageManager()
     var currentAlbumIndex: Int = 0  // 默认相册为0
     
@@ -95,6 +95,7 @@ class WLPhotoSelectViewController: UIViewController {
     var previousPreheatRect = CGRect.zero
     
     
+        
     // MARK: initial
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -142,9 +143,10 @@ class WLPhotoSelectViewController: UIViewController {
         self.view.backgroundColor = UIColor.brown
         // Do any additional setup after loading the view.
         
+        
         getAllAvailableAlbumData()
         
-        configureCollectionView() 
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -163,12 +165,24 @@ class WLPhotoSelectViewController: UIViewController {
         let StatusBarHeight: CGFloat = WLDevice.isIPhoneX() ? 44.0 : 20.0
         self.view.frame = CGRect(x: 0, y: StatusBarHeight, width: ScreenWidth, height: ScreenHeight)
         super.viewWillLayoutSubviews()
-        print(self.view.frame)        
+        print(self.view.frame)
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        configureCollectionView()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showFrom(VC: UIViewController) {
+        resetToDefault()
+        VC.present(self, animated: true, completion: nil)
     }
     
     func resetToDefault() {
@@ -202,10 +216,14 @@ class WLPhotoSelectViewController: UIViewController {
 
     
     func configureHeaderView() {
-        let albumCollection = allAvailableAlbumsArray.object(at: currentAlbumIndex) as! PHAssetCollection
-        self.btTitle.setTitle(albumCollection.localizedTitle, for: .normal)
+        if allAvailableAlbumsArray == nil || allAvailableAlbumsArray.count == 0 {
+            self.btTitle.setTitle("相机胶卷", for: .normal)
+        } else {
+            let albumCollection = allAvailableAlbumsArray.object(at: currentAlbumIndex) as! PHAssetCollection
+            self.btTitle.setTitle(albumCollection.localizedTitle, for: .normal)
+        }
         
-        btCancel.setImage(UIImage.createCloseImage(), for: .normal)
+        btCancel.setImage(UIImage.createCloseImage(), for: .normal)        
         
         setShowAlbumsHintLabel(isShowed: false)
         hideAllAlbumTableView()
@@ -321,6 +339,7 @@ class WLPhotoSelectViewController: UIViewController {
         let option = PHFetchOptions()
         option.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         option.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+        
         let allAssetsInAlbum = PHAsset.fetchAssets(in: assetCollection, options: option)
         
         if allAssetsInAlbum.count == 0 {
@@ -330,7 +349,10 @@ class WLPhotoSelectViewController: UIViewController {
         
         
         // 筛选过后的相册对象保存
-        if assetCollection.localizedTitle == "相机胶卷" {
+        if assetCollection.localizedTitle == "相机胶卷" ||
+           assetCollection.localizedTitle == "Camera Roll" ||
+           assetCollection.localizedTitle == "所有照片" ||
+           assetCollection.localizedTitle == "All Photos" {
             allAvailableAlbumsArray.insert(assetCollection, at: 0)  //相机胶卷插入顶端
             // 每个相册的所以资源对象 保存到数组
             allAlbumsPhotoAssets.insert(allAssetsInAlbum, at: 0)
@@ -347,36 +369,44 @@ class WLPhotoSelectViewController: UIViewController {
     func getAllAvailableAlbumData() {
 //        let albumOption = PHFetchOptions()
 //        albumOption.predicate = NSPredicate(format: "title = %@", "Camera Roll")  //NSPredicate(format: "title = %@", argumentArray: ["Camera Roll"])
+
+        DispatchQueue.global().async {
+            // 先获取智能相册
+            self.allAvailableAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil)
         
-        // 先获取智能相册
-        allAvailableAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil)
-        
-        for i in 0 ..< allAvailableAlbums.count {
-            // 获取相册集
-            let assetCollection = allAvailableAlbums.object(at: i)
-        
+            for i in 0 ..< self.allAvailableAlbums.count {
+                // 获取相册集
+                let assetCollection = self.allAvailableAlbums.object(at: i)
             
-            if !avaliableSmartAlbum.contains(assetCollection.localizedTitle!) {
-                continue
+                print(assetCollection.localizedTitle)
+                if !self.avaliableSmartAlbum.contains(assetCollection.localizedTitle!) {
+                    continue
+                }
+                
+                
+                
+                // 保存数据到内存
+                self.saveDataToTempory(assetCollection)
+                
+            }
+        
+        
+            // 再获取用户创建的相册
+            self.allAvailableAlbums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
+            for i in 0 ..< self.allAvailableAlbums.count {
+                let assetCollection = self.allAvailableAlbums.object(at: i)
+                
+                self.saveDataToTempory(assetCollection)
             }
             
+            // 一些初始化
+            self.currentAlbumPhotoAsset = self.allAlbumsPhotoAssets.object(at: self.currentAlbumIndex) as? PHFetchResult<PHAsset>
             
-            
-            // 保存数据到内存
-            saveDataToTempory(assetCollection)
-            
+            DispatchQueue.main.async {
+                self.photoCollectionView.reloadData()
+                self.allAlbumsTableView.reloadData()
+            }
         }
-        
-        // 再获取用户创建的相册
-        allAvailableAlbums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
-        for i in 0 ..< allAvailableAlbums.count {
-            let assetCollection = allAvailableAlbums.object(at: i)
-            
-            saveDataToTempory(assetCollection)
-        }
-        
-        // 一些初始化
-        currentAlbumPhotoAsset = allAlbumsPhotoAssets.object(at: currentAlbumIndex) as? PHFetchResult<PHAsset>
         
     }
     
@@ -447,6 +477,8 @@ class WLPhotoSelectViewController: UIViewController {
     
     // MARK: transition animation
     func setupTransitionAniamtion(sourceVC: UIViewController) {
+        self.modalPresentationStyle = .overFullScreen
+        
         var animation: interactiveTransition!
         if (sourceVC.navigationController != nil) {
             animation = interactiveTransition(sourceVC: sourceVC.navigationController!, destVC: self)

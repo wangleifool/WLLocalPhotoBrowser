@@ -150,7 +150,6 @@
 				3B3DE5D52073658A0062159E /* UIColorExtension.swift */,
 				3B3DE5D62073658A0062159E /* UIImageExtension.swift */,
 				3B3DE5D72073658A0062159E /* WLPhotoBrowerViewController.swift */,
-				3B3DE5D82073658A0062159E /* WLPhotoItem.swift */,
 				3B3DE5D92073658A0062159E /* WLPhotoSelectBrower.bundle */,
 				3B3DE5DA2073658A0062159E /* WLPhotoSelectCollectionViewCell.swift */,
 				3B3DE5DB2073658A0062159E /* WLPhotoSelectCollectionViewCell.xib */,
@@ -159,6 +158,7 @@
 				3B3DE5DE2073658A0062159E /* WLPhotoSelectViewController.swift */,
 				3B3DE5DF2073658A0062159E /* WLPhotoSelectViewController.xib */,
 				3B3DE5E02073658A0062159E /* WLPhotoView.swift */,
+				3B3DE5D82073658A0062159E /* WLPhotoItem.swift */,
 				3B546D4F2079F455007F3C25 /* WLDevice.swift */,
 			);
 			path = WLLocalPhotoBrower;
@@ -479,6 +479,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CG4F88GY6X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

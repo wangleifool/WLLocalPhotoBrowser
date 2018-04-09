@@ -41,7 +41,7 @@
                                 <action selector="btDonePressed:" destination="-1" eventType="touchUpInside" id="wIi-LV-kdR"/>
                             </connections>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xcQ-S2-zKb" customClass="SpringImageView" customModule="Spring">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xcQ-S2-zKb">
                             <rect key="frame" x="253" y="12" width="20" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="20" id="9gb-ci-awk"/>

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 let wlAnimationTimeInterval = 0.3
 
@@ -27,6 +28,8 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     
     // 定制化
     var dismissAnimationType: WLDismissAnimationType = .scale
+    
+       
     
     // 所有的图片资源对象
     var items: Array<WLPhotoItem>
@@ -63,7 +66,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     }()
     
     lazy var btDone: UIButton = {
-        var frame = CGRect(x: 0, y: 16, width: 64, height: 32)
+        var frame = CGRect(x: 0, y: 8, width: 64, height: 32)
         frame.origin.x = self.view.bounds.width - frame.width
         let bt = UIButton(frame: frame)
         bt.addTarget(self, action: #selector(self.btDonePressed(sender:)), for: .touchUpInside)
@@ -73,6 +76,15 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
 //        bt.clipsToBounds = true
 //        bt.layer.cornerRadius = frame.width/4
 //        bt.backgroundColor = UIColor.createBtBackgroundColor()
+        
+        return bt
+    }()
+    
+    lazy var btCancel: UIButton = {
+        var frame = CGRect(x: 8, y: 8, width: 32, height: 32)
+        let bt = UIButton(frame: frame)
+        bt.setImage(UIImage.createCloseWhiteImage(), for: .normal)
+        bt.addTarget(self, action: #selector(self.btCancelPressed(sender:)), for: .touchUpInside)
         
         return bt
     }()
@@ -121,6 +133,8 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         fatalError("init(coder:) has not been implemented") 
     }
     
+    
+    
     deinit {
         removeGesture()
     }
@@ -128,8 +142,6 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     // MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        configureBackground()
         
         // Do any additional setup after loading the view.
         configureSubviews()
@@ -145,6 +157,8 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        configureBackground()
         
         // 设置imageView 过渡动画效果
         let photoItem = items[currentPhotoIndex]
@@ -195,6 +209,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         
         self.view.addSubview(self.topBackgroundShapeView)
         self.view.addSubview(self.bottomBackgroundShapeView)
+        self.view.addSubview(self.btCancel)
         self.view.addSubview(self.btDone)
         self.view.addSubview(self.btSelect)
         self.view.addSubview(self.selectedNumImageView)
@@ -216,6 +231,9 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     }
     
     // MARK: private method
+    @objc private func btCancelPressed(sender: UIButton?) {
+        showDismissAnimation()
+    }
     @objc private func btDonePressed(sender: UIButton?) {
         // 如果没有选中任何照片，选中done，会将本照片标记为选中，反之正常返回即可
         if selectedPhotosIndex.count == 0 {
@@ -226,7 +244,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
             selectedPhotosIndex.append(currentPage)
         }
         
-        setStatusBarHidden(hidden: true)
+        setStatusBarHidden(hidden: false)
         self.dismiss(animated: true) {
             self.afterDismissPhotoBrower?(true,self.selectedPhotosIndex)
         }
@@ -244,9 +262,16 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
             btSelect.setImage(UIImage.createBigPhotoNotSelectImage(), for: .normal)
             selectedPhotosIndex.remove(object: currentPage)
         } else {
+            
+            if selectedPhotosIndex.count == maxSelectPhotoNum {
+                WLProgressHUD.showMessage(text: "最多只能选择9张图片")
+                return
+            }
+            
             btSelect.isSelected = true
             btSelect.setImage(UIImage.createBigPhotoSelectImage(), for: .normal)
             selectedPhotosIndex.append(currentPage)
+            
         }
         
         updateSelectedNumImageView(animate: true)
@@ -308,6 +333,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     // 进入纯净模式
     func hideSubviews() {
         btDone.isHidden = true
+        btCancel.isHidden = true
         btSelect.isHidden = true
         pageLabel.isHidden = true
         selectedNumImageView.isHidden = true
@@ -318,6 +344,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     
     func showSubviews() {
         btDone.isHidden = false
+        btCancel.isHidden = false
         btSelect.isHidden = false
         pageLabel.isHidden = false
         selectedNumImageView.isHidden = false
@@ -331,6 +358,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         let item = items[currentPhotoIndex]
         let photoView = getPhotoView(index: currentPhotoIndex)
         
+        hideSubviews()
         
         if item.sourceView == nil {  // 没有记录sourceView
             UIView.animate(withDuration: wlAnimationTimeInterval, animations: {
@@ -349,7 +377,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
             sourceRect = sourceView.superview?.convert(sourceView.frame, to: photoView)  // 获取souceView相对于PhotoView的坐标尺寸
         }
         
-        if let rect = sourceRect {
+        if let rect = sourceRect {            
             UIView.animate(withDuration: wlAnimationTimeInterval, animations: {
                 photoView?.imageView.frame = rect
                 self.view.backgroundColor = UIColor.clear
@@ -387,6 +415,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         } else {
             photoItem.sourceView?.alpha = 1
         }
+        
         
         setStatusBarHidden(hidden: false)
         afterDismissPhotoBrower?(false,selectedPhotosIndex)

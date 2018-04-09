@@ -11,6 +11,14 @@ import Photos
 
 extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionViewDelegate,WLPhotoSelectCollectionViewCellDelegate {
     
+    func createPhotoItem(index: Int) -> WLPhotoItem {
+        let asset: PHAsset = currentAlbumPhotoAsset?.object(at: index) as! PHAsset
+        
+        let newIndexPath = IndexPath(row: index, section: 0)
+        let cell = photoCollectionView.cellForItem(at: newIndexPath) as? WLPhotoSelectCollectionViewCell
+        
+        return WLPhotoItem(sourceView: cell?.imageView, imageAsset: asset)
+    }
     
     // MARK: collection view data source
     func configureCollectionView() {
@@ -29,7 +37,11 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currentAlbumPhotoAsset!.count
+        if currentAlbumPhotoAsset == nil {
+            return 0
+        }
+        
+        return currentAlbumPhotoAsset!.count                
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -62,18 +74,15 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
         
         // 获取照片
         cell.representedIdentifier = asset?.localIdentifier
-        let requestOption = PHImageRequestOptions()
-        requestOption.resizeMode = .exact
-        var rect = CGRect.zero
-        rect.size = photoCollectionLayout.itemSize
-        requestOption.normalizedCropRect = rect
+//        let requestOption = PHImageRequestOptions()
+//        requestOption.resizeMode = .fast
+//        var rect = CGRect.zero
+//        rect.size = photoCollectionLayout.itemSize
+//        requestOption.normalizedCropRect = rect
         
-        assetManager.requestImage(for: asset!, targetSize: thumbnailSize, contentMode: .aspectFill, options: requestOption) { (image, _) in
+        assetManager.requestImage(for: asset!, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { (image, _) in
             if cell.representedIdentifier == asset?.localIdentifier && image != nil {
-                cell.imageView.image = image
-                print("indexpath.row: \(indexPath.row)")
-                
-                //                self.currentAlbumPhotoImages.insert(image!, at: indexPath.row)
+                cell.imageView.image = image                
             }
         }
         
@@ -91,17 +100,7 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
             
             if selectedPhotoIndex.contains(indexPath.row) {
                 for i in selectedPhotoIndex {
-                    let asset: PHAsset = currentAlbumPhotoAsset?.object(at: i) as! PHAsset
-                    
-                    let newIndexPath = IndexPath(row: i, section: 0)
-                    let cell = collectionView.cellForItem(at: newIndexPath) as? WLPhotoSelectCollectionViewCell
-                    
-                    
-//                    let item: KSPhotoItem = KSPhotoItem(sourceView: cell?.imageView, imageAsset:asset)
-                    let item: WLPhotoItem = WLPhotoItem(sourceView: cell?.imageView, imageAsset: asset)
-                    items.append(item)
-                    
-                    
+                    items.append(createPhotoItem(index: i))
                 }
                 
                 selectedIndex = selectedPhotoIndex.index(of: indexPath.row)!//图片查看器的最先显示的图片的index
@@ -112,18 +111,33 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
             }
             
         } else {
-            for i in 0 ..< currentAlbumPhotoAsset!.count {
-                let asset: PHAsset = currentAlbumPhotoAsset?.object(at: i) as! PHAsset
-                
-                let newIndexPath = IndexPath(row: i, section: 0)
-                let cell = collectionView.cellForItem(at: newIndexPath) as? WLPhotoSelectCollectionViewCell
-//                let item: KSPhotoItem = KSPhotoItem(sourceView: cell?.imageView, imageAsset:asset)
-                let item: WLPhotoItem = WLPhotoItem(sourceView: cell?.imageView, imageAsset: asset)
-                items.append(item)
-                
-            }
             
             selectedIndex = indexPath.row  //图片查看器的最先显示的图片的index
+            
+//            items = Array<WLPhotoItem>.init(repeating: WLPhotoItem(), count: currentAlbumPhotoAsset!.count)
+//
+//            // 先装 3张图片，立即显示
+//            if selectedIndex-1 >= 0 {
+//                items[selectedIndex-1] = createPhotoItem(index: selectedIndex-1)
+//            }
+//
+//            items[selectedIndex] = createPhotoItem(index: selectedIndex)
+//
+//            if selectedIndex+1 < currentAlbumPhotoAsset!.count {
+//                items[selectedIndex+1] = createPhotoItem(index: selectedIndex+1)
+//            }
+            
+            // 异步加载所有的照片
+//            DispatchQueue.global().async {
+//                var asyncTempItems = Array<WLPhotoItem>()
+                for i in 0 ..< self.currentAlbumPhotoAsset!.count {
+                    items.append(self.createPhotoItem(index: i))
+                }
+                
+//                self.photoBrowser?.items = asyncTempItems
+//            }
+            
+            
         }
         
         
@@ -132,29 +146,13 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
     }
     
     func showPhotoBrower(photos: Array<WLPhotoItem>, selectedIndex: Int) {
-//        let browser: KSPhotoBrowser = KSPhotoBrowser(photoItems: photos as! [KSPhotoItem], selectedIndex: selectedIndex)
-//        browser.dismissalStyle = .scale
-//        browser.backgroundStyle = .black
-//        browser.pageindicatorStyle = .text
-//        browser.loadingStyle = .indeterminate
-//        browser.allPhotosNumInTrue = UInt(currentAlbumPhotoAsset!.count)
-//        browser.afterSelectedFromPhotoBrower = { (isDone: Bool) in
-//            print("selected num: \(self.selectedPhotoIndex.count)")
-//            if isDone {
-//                self.btDonePressed(self.btDone)
-//            } else {
-//                self.photoCollectionView.reloadData()
-//                self.updateSelectedNumUI()
-//            }
-//        }
-//        browser.selectedPhotosIndex = selectedPhotoIndex
-//        browser.show(from: self)
         
         
-        let browser: WLPhotoBrowerViewController = WLPhotoBrowerViewController(items: photos, selectedIndex: selectedIndex)
-        browser.allPhotosNumInTrue = (currentAlbumPhotoAsset?.count)!
-        browser.selectedPhotosIndex = selectedPhotoIndex
-        browser.afterDismissPhotoBrower = {(isBtDonePressed: Bool, selectedIndexs: Array<Int>) in
+        let photoBrowser = WLPhotoBrowerViewController(items: photos, selectedIndex: selectedIndex)
+        
+        photoBrowser.allPhotosNumInTrue = (currentAlbumPhotoAsset?.count)!
+        photoBrowser.selectedPhotosIndex = selectedPhotoIndex
+        photoBrowser.afterDismissPhotoBrower = {(isBtDonePressed: Bool, selectedIndexs: Array<Int>) in
             self.selectedPhotoIndex = selectedIndexs
             
             if isBtDonePressed {
@@ -164,7 +162,8 @@ extension WLPhotoSelectViewController : UICollectionViewDataSource,UICollectionV
                 self.updateSelectedNumUI()
             }
         }
-        self.present(browser, animated: false, completion: nil)
+        self.present(photoBrowser, animated: false, completion: nil)
+        
     }
     
    
