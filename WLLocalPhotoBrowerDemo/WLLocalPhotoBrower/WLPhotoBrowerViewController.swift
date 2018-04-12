@@ -22,7 +22,7 @@ enum WLDismissAnimationType {
 
 typealias AfterDismissPhotoBrower = (_ isBtDonePressed: Bool, _ selectedIndexs: Array<Int>) -> Void
 
-class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitioningDelegate,UIScrollViewDelegate {
+class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitioningDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate {
     
     var afterDismissPhotoBrower: AfterDismissPhotoBrower?
     
@@ -437,6 +437,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         
         let oneTapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.oneTap(gesture:)))
         oneTapGesture.numberOfTapsRequired = 1
+        oneTapGesture.delegate = self
         self.view.addGestureRecognizer(oneTapGesture)
         
         let panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(gesture:)))
@@ -451,6 +452,13 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
         }
     }
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is UIButton {
+            return false
+        } else {
+            return true
+        }
+    }
     
     private func didPanGestureBegin() {
         let photoItem = items[currentPhotoIndex]
@@ -638,7 +646,7 @@ class WLPhotoBrowerViewController: UIViewController,UIViewControllerTransitionin
     // 刷新需要显示的photoView
     private func configurePhotoViews() {
         let scrollView = self.mainScrollView
-        let page = Int(scrollView.contentOffset.x / scrollView.frame.width)
+        let page = Int(scrollView.contentOffset.x / scrollView.frame.width + 0.5) // 滑到超过一半，即认定进入新的一页
         
         // 使用经典的 三页面 循环重用
         for i in page-1 ... page+1 {
